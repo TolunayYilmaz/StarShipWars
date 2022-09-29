@@ -32,17 +32,20 @@ public class Asteroid : MonoBehaviour
         }
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Bullet"))
         {
+            GameObject.FindGameObjectWithTag("Audio").GetComponent<Audio>().FireAndExplosion(1);
             Debug.Log("patladý");
             Destroy(other.gameObject);
-            Instantiate(exploxionAstroidPrefab, transform.position, Quaternion.identity);
             gameManager.LevelUp(gameObject);
-            Destroy(gameObject);  
+            DestroyAstroid();
         }
     }
-
+    public void DestroyAstroid()
+    {
+        Instantiate(exploxionAstroidPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    }
 }

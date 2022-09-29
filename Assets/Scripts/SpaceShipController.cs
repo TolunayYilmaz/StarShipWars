@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpaceShipController : MonoBehaviour
@@ -7,10 +5,13 @@ public class SpaceShipController : MonoBehaviour
     const float force = 5f;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] GameObject exploxionPrefab;
+    Audio Sound;
+    GameManager gameManager;
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameManager = Camera.main.GetComponent<GameManager>();
+         Sound= GameObject.FindGameObjectWithTag("Audio").GetComponent<Audio>();
     }
 
     // Update is called once per frame
@@ -38,7 +39,7 @@ public class SpaceShipController : MonoBehaviour
     void Fire()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-        {
+        {   Sound.FireAndExplosion(0,0.2f);
             Instantiate(bulletPrefab, new Vector2(transform.position.x, transform.position.y+1f), Quaternion.identity);
 
         }
@@ -47,7 +48,10 @@ public class SpaceShipController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Asteroid"))
         {
-            Instantiate(exploxionPrefab,transform.position, Quaternion.identity);   
+            Sound.FireAndExplosion(2);
+            Instantiate(exploxionPrefab,transform.position, Quaternion.identity);
+            gameManager.GameOver();
+
             Destroy(gameObject);
         }
     }

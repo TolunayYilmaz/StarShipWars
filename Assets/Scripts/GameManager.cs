@@ -8,8 +8,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<GameObject> asteroidPrefabs= new List<GameObject>();   
     List<GameObject> asteroids = new List<GameObject>();
     [SerializeField] int difficulty;//zorluk
-    void Start()
+    UiControl uiControl;
+    public void PlayGame()
     {
+        uiControl = GetComponent<UiControl>();
+        uiControl.StartedGame();
+
         Instantiate(spaceShip);
         spaceShip.transform.position = new Vector3(0, ScreenCalculator.Bottom + 1.5f);
         SpawnAsteroid(3);
@@ -34,6 +38,7 @@ public class GameManager : MonoBehaviour
     }
     public void LevelUp(GameObject astroid)
     {
+        uiControl.DestroyAsteroid(astroid);
         asteroids.Remove(astroid);
         if (asteroids.Count == 0)
         {
@@ -42,5 +47,13 @@ public class GameManager : MonoBehaviour
             
         }
     }
-
+    public void GameOver()
+    {
+        foreach (GameObject astroid in asteroids)
+        {
+            astroid.GetComponent<Asteroid>().DestroyAstroid();
+        }
+        asteroids.Clear();
+        uiControl.FinishGame();
+    }
 }
